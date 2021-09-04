@@ -515,11 +515,15 @@ export class Canvas extends Component {
     }
 
     editKeyDown = evt => {
-        if (evt.key === 'Enter') {
+        if (['Delete', 'Backspace', ' '].includes(evt.key)) {
+            evt.stopPropagation()
+        } else if (evt.key === 'Enter') {
             evt.stopPropagation()
             this.createTextNode()
             this.updateHistory()
             this.afterDrawUpdate()
+        } else if (![37, 39].includes(evt.keyCode) && !/^[ -~]$/.test(evt.key)){
+            evt.preventDefault()
         }
     }
 
@@ -572,6 +576,14 @@ export class Canvas extends Component {
             this.createCurve(false)
             this.updateHistory()
             this.afterDrawUpdate()
+        } else if ((evt.altKey || evt.metaKey) && this.props.tool === 'curve' && !this.pointerDown) {
+            evt.preventDefault()
+            if (this.cubicBuffer.length > 0) {
+                this.cubicBuffer.pop()
+                this.cubicBuffer.push([...this.eventBuffer[this.eventBuffer.length - 1]])
+            }
+        } else {
+            console.log(evt.keyCode)
         }
     }
 

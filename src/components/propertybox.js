@@ -23,7 +23,7 @@ export default class PropertyBox extends Component {
             evt.stopPropagation()
         } else if (['Enter'].includes(evt.key)) {
             evt.target.blur()
-        } else if (!/^[\d\.]$/.test(evt.key)){
+        } else if (![37, 39].includes(evt.keyCode) && !/^[\d\.]$/.test(evt.key)){
             evt.preventDefault()
         }
     }
@@ -33,6 +33,8 @@ export default class PropertyBox extends Component {
             evt.stopPropagation()
         } else if (['Enter'].includes(evt.key)) {
             evt.target.blur()
+        } else if (![37, 39].includes(evt.keyCode) && !/^[ -~]$/.test(evt.key)){
+            evt.preventDefault()
         }
     }
 
