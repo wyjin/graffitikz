@@ -99,7 +99,7 @@ export class App extends Component {
     toggleInfo = ()=> {
         this.setState({
             showInfo: !this.state.showInfo
-        }, ()=>{console.log(this.state.showInfo)})
+        })
     }
 
     openGithubLink = () => {

@@ -39,12 +39,43 @@ export default class PropertyBox extends Component {
     }
 
     updateStrokeColor = (color) => {
-        this.props.updateState(this.props.id, {strokeColor: color})
+        if (this.props.id !== '') {
+            this.props.updateState(this.props.id, {strokeColor: color})
+        }
     }
 
     updateFillColor = (color) => {
-        this.props.updateState(this.props.id, {fillColor: color})
+        if (this.props.id !== '') {
+            this.props.updateState(this.props.id, {fillColor: color})
+        }
     }
+
+    updateText = (evt) => {
+        document.getElementById('dummy').style.display = 'none'
+        if (this.props.id !== '') {
+            this.props.updateState(this.props.id, {text: evt.target.value})
+        }
+    }
+
+    updateCornerRadius = (evt) => {
+        document.getElementById('dummy').style.display = 'none'
+        if (this.props.id !== '') {
+            this.props.updateState(this.props.id, {cornerRadius: evt.target.value})
+        }
+    }
+
+    updateStrokeWidth = (evt) => {
+        document.getElementById('dummy').style.display = 'none'
+        if (this.props.id !== '') {
+            this.props.updateState(this.props.id, {strokeWidth: evt.target.value})
+        }
+    }
+
+    focus = (evt) => {
+        document.getElementById('dummy').style.display = 'block'
+        evt.target.focus()
+    }
+
 
     render() {
         const enableArrow = ['line', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('line') || (this.props.id.includes('curve') && this.props.params.closed === false)))
@@ -78,7 +109,7 @@ export default class PropertyBox extends Component {
                     </select>
                 }
                 {enableArrow &&
-                    <select key={this.props.id='-arrow'} id="arrow" onChange={this.props.onArrowChange} value={this.props.params.arrow}>
+                    <select key={this.props.id+'-arrow'} id="arrow" onChange={this.props.onArrowChange} value={this.props.params.arrow}>
                         <option value=''>No Arrow</option>
                         <option value='->'>Arrow</option>
                         <option value='<->'>Double-headed</option>
@@ -88,13 +119,13 @@ export default class PropertyBox extends Component {
                     <>
                     <Separator />
                     <label for="line-width">Line Width: </label>
-                    <input key={this.props.id+'-line-width'} type="number" id="line-width" onChange={this.props.onWeightChange} value={this.props.params.strokeWidth} min="0.5" max="15" step="0.5" onKeyDown={this.onInputNumberKeyDown} />
+                    <input key={this.props.id+'-line-width'} ref={el=>this.lineWidthInput=el} type="number" id="line-width" onChange={this.props.onWeightChange} value={this.props.params.strokeWidth} min="0.5" max="15" step="0.5" onKeyDown={this.onInputNumberKeyDown} onBlur={this.updateStrokeWidth} onClick={this.focus} />
                     </>
                 }
                 {enableCorner &&
                     <>
                     <label for="corner-size">Corner Radius: </label>
-                    <input key={this.props.id+'-corner-size'} type="number" id="corner-size" onChange={this.props.onCornerRadiusChange} value={this.props.params.cornerRadius} min="0" max="100" step="5" onKeyDown={this.onInputNumberKeyDown} />
+                    <input key={this.props.id+'-corner-size'} ref={el=>this.cornerSizeInput=el} type="number" id="corner-size" onChange={this.props.onCornerRadiusChange} value={this.props.params.cornerRadius} min="0" max="100" step="5" onKeyDown={this.onInputNumberKeyDown} onBlur={this.updateCornerRadius} onClick={this.focus} />
                     </>
                 }
                 {!text &&
@@ -106,7 +137,7 @@ export default class PropertyBox extends Component {
                 {textEdit &&
                     <>
                     <label for="text-node-content-edit">Text: </label>
-                    <input key={this.props.id+'-text'} type="text" id="text-content" onChange={this.props.onTextChange} value={this.props.params.text} onKeyDown={this.onInputTextKeyDown} onChange={this.props.onTextChange}/>
+                    <input key={this.props.id+'-text'} type="text" id="text-content" onChange={this.props.onTextChange} value={this.props.params.text} onKeyDown={this.onInputTextKeyDown} onChange={this.props.onTextChange} onBlur={this.updateText} onClick={this.focus} />
                     </>
                 }
                 {text &&

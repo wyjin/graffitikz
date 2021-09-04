@@ -319,6 +319,7 @@ export class RoundShape extends Component {
             ry: props.ry * 1,
             strokeColor: new Color(...props.strokeColor),
             strokeWidth: 2*props.strokeWidth,
+            strokeStyle: props.strokeStyle,
             fillColor: new Color(...props.fillColor),
             shadow: 'hidden',
             selected: false,
@@ -464,6 +465,9 @@ export class RoundShape extends Component {
         if (prevProps.strokeWidth != this.props.strokeWidth) {
             this.setState({strokeWidth: 2*this.props.strokeWidth})
         }
+        if (colorsNeq(prevProps.strokeStyle, this.props.strokeStyle)) {
+            this.setState({strokeStyle: this.props.strokeStyle})
+        }
         if (colorsNeq(prevProps.fillColor, this.props.fillColor)) {
             this.setState({fillColor: new Color (...this.props.fillColor)})
         }
@@ -488,7 +492,7 @@ export class RoundShape extends Component {
     }
 
     toTikZ() {
-        return `\\draw[draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()}] (${this.state.cx},${-this.state.cy}) ellipse (${this.state.rx} and ${this.state.ry});\n`
+        return `\\draw[${this.state.strokeStyle}, draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()}] (${this.state.cx},${-this.state.cy}) ellipse (${this.state.rx} and ${this.state.ry});\n`
     }
 
     componentWillUnmount() {
@@ -503,12 +507,12 @@ export class RoundShape extends Component {
     render() {
         const style = `stroke:${this.state.strokeColor.htmlColor()};stroke-width:${this.state.strokeWidth};fill:${this.state.fillColor.htmlColor()}`
         const shadowStyle = `stroke:#ccc;stroke-width:${Math.min(this.state.strokeWidth*10, this.state.strokeWidth+10)};fill:none;`
-
+        const strokeStyle = this.state.strokeStyle === 'dashed'? '8 8' : ''
 
         return (
             <g id={this.state.id} ref={el=>this.node=el}>
                 <ellipse cx={this.state.cx} cy={this.state.cy} rx={this.state.rx} ry={this.state.ry} style={shadowStyle} visibility={this.state.shadow}/>
-                <ellipse cx={this.state.cx} cy={this.state.cy} rx={this.state.rx} ry={this.state.ry} style={style} />
+                <ellipse cx={this.state.cx} cy={this.state.cy} rx={this.state.rx} ry={this.state.ry} style={style} strokeDasharray={strokeStyle} />
                 <Point
                     show={this.state.selected}
                     x={this.state.bottomAnchor[0]}
@@ -544,6 +548,7 @@ export class Polygon extends Component {
             points: JSON.parse(JSON.stringify(props.points)),
             strokeColor: new Color(...props.strokeColor),
             strokeWidth: 2.0* props.strokeWidth,
+            strokeStyle: props.strokeStyle,
             fillColor: new Color(...props.fillColor),
             cornerRadius: 1.0* props.cornerRadius,
             shadow: 'hidden',
@@ -648,6 +653,9 @@ export class Polygon extends Component {
         if (prevProps.strokeWidth != this.props.strokeWidth) {
             this.setState({strokeWidth: 2*this.props.strokeWidth})
         }
+        if (prevProps.strokeStyle != this.props.strokeStyle) {
+            this.setState({strokeStyle: this.props.strokeStyle})
+        }
         if (prevProps.cornerRadius != this.props.cornerRadius) {
             this.setState({cornerRadius: 1.0 * this.props.cornerRadius})
         }
@@ -676,7 +684,7 @@ export class Polygon extends Component {
 
     toTikZ() {
         const pointsFormat = this.state.points.map(x => `(${x[0]},${-x[1]})`).join(' -- ')
-        return `\\draw[rounded corners=${this.state.cornerRadius*0.4}, draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()}] ${pointsFormat} -- cycle;\n`
+        return `\\draw[${this.state.strokeStyle}, rounded corners=${this.state.cornerRadius*0.4}, draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()}] ${pointsFormat} -- cycle;\n`
     }
 
     componentWillUnmount() {
@@ -705,6 +713,7 @@ export class Polygon extends Component {
     render() {
         const style = `stroke:${this.state.strokeColor.htmlColor()};stroke-width:${this.state.strokeWidth};fill:${this.state.fillColor.htmlColor()}`
         const shadowStyle = `stroke:#ccc;stroke-width:${Math.min(this.state.strokeWidth*10, this.state.strokeWidth+10)};fill:none;`
+        const strokeStyle = this.state.strokeStyle === 'dashed'? '8 8' : ''
 
         const controlPoints = []
         for (let i = 0; i < this.state.points.length; i++) {
@@ -742,7 +751,7 @@ export class Polygon extends Component {
         return (
             <g id={this.state.id} ref={el=>this.node=el}>
             <path d={roundCornerDef} style={shadowStyle} visibility={this.state.shadow}/>
-            <path d={roundCornerDef} style={style} />
+            <path d={roundCornerDef} style={style} strokeDasharray={strokeStyle} />
             {controlPoints}
             </g>
         )
@@ -878,7 +887,6 @@ export class TextNode extends Component {
                 text: this.props.text.slice()
             }, ()=>{
                 const bbox = document.getElementById(this.state.id+'-content').getBoundingClientRect()
-                console.log(bbox.width, bbox.height)
                 const [offsetX, offsetY] = [0.5*bbox.width*this.props.scale, 0.5*bbox.height*this.props.scale]
                 this.setState((state) => ({
                     svgX: state.svgX + 0.5 * state.width - offsetX,

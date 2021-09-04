@@ -167,7 +167,7 @@ export class Canvas extends Component {
         if (evt.target.value === '') return
         if (this.props.tool === 'select' && this.state.selectedShape !== '') {
             this.state.shapes[this.state.selectedShape].strokeWidth = evt.target.value
-            this.updateHistory()
+            // this.updateHistory()
         } else {
             this.state.drawingProperties.strokeWidth = evt.target.value
         }
@@ -210,7 +210,7 @@ export class Canvas extends Component {
         if (evt.target.value === '') return
         if (this.props.tool === 'select' && this.state.selectedShape !== '' && this.state.selectedShape.includes('polygon')) {
             this.state.shapes[this.state.selectedShape].cornerRadius = evt.target.value
-            this.updateHistory()
+            // this.updateHistory()
         } else {
             this.state.drawingProperties.cornerRadius = evt.target.value
         }
@@ -220,7 +220,6 @@ export class Canvas extends Component {
     textChange = evt => {
         if (this.props.tool === 'select' && this.state.selectedShape.includes('text')) {
             this.state.shapes[this.state.selectedShape].text = evt.target.value.slice()
-            this.updateHistory()
         }
         this.forceUpdate()
     }
@@ -582,8 +581,6 @@ export class Canvas extends Component {
                 this.cubicBuffer.pop()
                 this.cubicBuffer.push([...this.eventBuffer[this.eventBuffer.length - 1]])
             }
-        } else {
-            console.log(evt.keyCode)
         }
     }
 
