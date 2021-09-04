@@ -37,7 +37,7 @@ export default class PropertyBox extends Component {
     }
 
     render() {
-        const enableArrow = ['line', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('line') || this.props.id.includes('curve')))
+        const enableArrow = ['line', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('line') || (this.props.id.includes('curve') && this.props.params.closed === false)))
         const enableFill = ['roundShape', 'polygon', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('circle') || this.props.id.includes('polygon') || this.props.id.includes('curve')))
         const enableCorner = [ 'polygon'].includes(this.props.tool) || (this.props.tool === 'select' &&  this.props.id.includes('polygon'))
         const enableDelete = this.props.tool === 'select'

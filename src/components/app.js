@@ -50,6 +50,8 @@ export class App extends Component {
                         }
                         break;
                     case 's': case 'S':
+                        evt.preventDefault();
+                        evt.stopPropagation();
                         this.copyPermalink()
                 }
             }
