@@ -178,7 +178,6 @@ export class Canvas extends Component {
         const colorArray = [color.r, color.g, color.b, color.a]
         if (this.props.tool === 'select' && this.state.selectedShape !== '') {
             this.state.shapes[this.state.selectedShape].strokeColor = [...colorArray]
-            this.updateHistory()
         } else {
             this.state.drawingProperties.strokeColor = [...colorArray]
         }
@@ -189,7 +188,6 @@ export class Canvas extends Component {
         const colorArray = [color.r, color.g, color.b, color.a]
         if (this.props.tool === 'select' && this.state.selectedShape !== '') {
             this.state.shapes[this.state.selectedShape].fillColor = [...colorArray]
-            this.updateHistory()
         } else {
             this.state.drawingProperties.fillColor = [...colorArray]
         }
@@ -816,6 +814,7 @@ export class Canvas extends Component {
             onDelete={this.deleteShape}
             snapping={this.state.snapping}
             toggleSnapping={this.toggleSnapping}
+            updateState={this.updateState}
         />}
         </>)
     }

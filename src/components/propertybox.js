@@ -36,6 +36,14 @@ export default class PropertyBox extends Component {
         }
     }
 
+    updateStrokeColor = (color) => {
+        this.props.updateState(this.props.id, {strokeColor: color})
+    }
+
+    updateFillColor = () => {
+        this.props.updateState(this.props.id, {fillColor: color})
+    }
+
     render() {
         const enableArrow = ['line', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('line') || (this.props.id.includes('curve') && this.props.params.closed === false)))
         const enableFill = ['roundShape', 'polygon', 'curve'].includes(this.props.tool) || (this.props.tool === 'select' && (this.props.id.includes('circle') || this.props.id.includes('polygon') || this.props.id.includes('curve')))
@@ -103,12 +111,12 @@ export default class PropertyBox extends Component {
                     <label for="stroke-color-picker">Text Color: </label>
                 }
 
-                <ColorPickerToggler key={this.props.id+'-stroke-color'} id="stroke-color-picker" color={this.props.params.strokeColor} onChange={this.props.onStrokeColorChange}/>
+                <ColorPickerToggler key={this.props.id+'-stroke-color'} id="stroke-color-picker" color={this.props.params.strokeColor} onChange={this.props.onStrokeColorChange} update={this.updateStrokeColor} />
 
                 {enableFill &&
                     <>
                     <label for="fill-color-picker">Fill: </label>
-                    <ColorPickerToggler key={this.props.id+'-fill-color'} id="fill-color-picker" color={this.props.params.fillColor} onChange={this.props.onFillColorChange}/>
+                    <ColorPickerToggler key={this.props.id+'-fill-color'} id="fill-color-picker" color={this.props.params.fillColor} onChange={this.props.onFillColorChange} update={this.updateFillColor} />
                     </>
                 }
                 {enableDelete &&
@@ -144,6 +152,7 @@ class ColorPickerToggler extends Component {
         if (this.picker && !this.picker.contains(evt.target) && this.state.isOpen) {
             this.setState({isOpen: false}, ()=>{
                 document.getElementById('dummy').style.display = 'none'
+                this.props.update(this.state.color)
             })
         }
     }
