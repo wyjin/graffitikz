@@ -1,0 +1,380 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-appearance:none;
+}
+
+body, html {
+    height: 100%;
+    overflow: hidden;
+}
+
+html, input, button {
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, Roboto, Helvetica, Arial, sans-serif;
+}
+
+button {
+    padding: .3rem 1rem;
+    background: #ccc;
+    border: 0;
+    transition: background-color .2s;
+  }
+  button:hover, button:focus {
+    background: #bbb;
+    transition: none;
+    outline: none;
+  }
+  button:active {
+    background: #aaa;
+}
+
+textarea {
+    -ms-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+a, img {
+    -webkit-user-drag: none;
+}
+
+.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#grid {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+}
+
+.edit {
+        position: absolute;
+        width: 120px;
+        height: 30px;
+        opacity: 1;
+        border-radius: 3px;
+        pointer-events: none;
+        background: #ccc;
+    }
+    .edit input {
+        border: none;
+        outline: none;
+        width: 100%;
+        text-align: center;
+        background: transparent;
+        font: 10pt Consolas, monospace;
+    }
+    .edit p {
+        font-size: xx-small;
+        font-style: italic;
+        background: #fff;
+    }
+
+
+.toolbox.fixed-toolbox {
+        position: absolute;
+        top: 50%;
+        background: rgba(221, 221, 221);
+        box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, .5);
+        transform: translateY(-60%);
+        border-radius: 5px;
+    }
+    .toolbox.fixed-toolbox ul {
+        line-height: 0;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        list-style: none;
+    }
+    .toolbox.fixed-toolbox li.separator {
+        height: 2px;
+        width: 100%;
+        background: #aaa;
+    }
+    .toolbox.fixed-toolbox li.button a {
+        transition: background-color .2s;
+    }
+    .toolbox.fixed-toolbox li.button a:hover {
+        background: #ccc;
+        transition: none;
+    }
+    .toolbox.fixed-toolbox li.button a:active {
+        background: #aaa;
+    }
+    .toolbox.fixed-toolbox li.button.checked a {
+        background: #bbb;
+    }
+    .toolbox.fixed-toolbox li.button.disabled a {
+        opacity: .4;
+        pointer-events: none;
+    }
+    .toolbox.fixed-toolbox li.button a {
+        display: block;
+        padding: .5em;
+    }
+    .toolbox.fixed-toolbox li.button img {
+        display: block;
+        background-size: 100%;
+        background-position: center;
+        width: 24px;
+        height: 24px;
+        transition: background-image .2s;
+}
+
+#properties {
+    padding:  7px;
+    background-color: rgba(57, 57, 57, .9);
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, .5);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+    bottom: 0;
+    color:white;
+    display: block;
+    } #properties  ul {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        list-style: none;
+    } #properties > ul > .separator {
+        margin: 0 .5em;
+        width: 2px;
+        height:inherit;
+        background: rgba(255, 255, 255, .4);
+    } #properties > ul > select{
+        padding: 0 0.5rem;
+        text-align: center;
+        background: rgba(120, 120, 120, .9);
+        border-radius: 3px;
+        color: white;
+        border: none;
+
+        margin: 0 0.3em;
+    } #properties > ul > label {
+        display: block;
+        line-height: 2em;
+        margin: 0;
+        padding: 0 0.3em;
+        white-space: nowrap;
+    } #properties > ul > input[type=number] {
+        -ms-user-select: number;
+        -moz-user-select: number;
+        -webkit-user-select: number;
+        user-select: number;
+        text-align: center;
+        width: 50px;
+    }
+    #properties li.button a:hover {
+        background: rgba(150, 150, 150, .9);
+      }
+      #properties li.button a:active {
+        background:rgba(200, 200, 200, .9);
+      }
+      #properties li.button.checked a {
+        background: rgba(150, 150, 150, .9);
+      }
+
+        #properties li.button.remove a:hover {
+            background: #E81123;
+        }
+        #properties li.button.remove a:active {
+            background: #C60001;
+        }
+        #properties li.button a {
+            display: block;
+            padding: 0.1em;
+        }
+        #properties li.button a img {
+            display: block;
+            background-size: 100%;
+            background-position: center;
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+            transition: background-image .2s;
+    }
+
+#modal-overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0);
+        visibility: hidden;
+        transition: background-color .2s;
+    }
+    #modal-overlay.show {
+        visibility: visible;
+        background: rgba(255, 255, 255, .5);
+    }
+    #modal-overlay .modal-box {
+        background: rgba(221, 221, 221, .7);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, .5);
+        padding: 1rem;
+        opacity: 0;
+        transform: scale(.9) translateY(5rem);
+        transition: transform .2s, opacity .2s;
+    }
+    #modal-overlay.show .modal-box {
+        opacity: 1;
+        transform: none;
+}
+
+.code-box textarea {
+        display: block;
+        padding: .5rem;
+        resize: none;
+        width: 62vw;
+        height: 50vh;
+        font: 1rem/1.5 Consolas, monospace;
+        background: #393939;
+        color: white;
+        white-space: pre;
+    }
+    .code-box textarea:focus {
+        outline: 2px solid #4494F4;
+    }
+    .code-box .buttons {
+        display: flex;
+        justify-content: flex-end;
+        list-style: none;
+        margin-top: 1rem;
+    }
+    .code-box  li {
+        margin-left: .5rem;
+    }
+    .code-box li.separator {
+        flex: 1;
+}
+
+.picker {
+    position: relative;
+  }
+
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .popover {
+    position: absolute;
+    top: calc(-207px);
+    left: calc(-86px);
+    border-radius: 9px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .react-colorful {
+      height: 200px;
+  }
+
+#dummy {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    left: 0;
+    right: 0;
+    display: none;
+}
+
+.floating-toolbox {
+    position: fixed;
+    bottom: 0.5em;
+}
+
+.floating-toolbox.left {
+    left: 0.5em;
+}
+
+.floating-toolbox.right {
+    right: 1em;
+}
+
+.floating-toolbox ul {
+    line-height: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    list-style: none;
+}
+
+.floating-toolbox .float-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: rgba(221, 221, 221);
+    opacity: 0.5;
+    margin: 0.3rem 0;
+}
+
+.floating-toolbox .float-button#info {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: rgba(221, 221, 221);
+    opacity: 0.5;
+    margin: 0.3rem 0;
+}
+
+.floating-toolbox .float-button:hover {
+    opacity: 1;
+}
+
+.floating-toolbox li.button a {
+    display: block;
+    padding: 8px;
+    margin: 0;
+    height:100%;
+    width: 100%;
+    border-radius: 50%;
+    transition: background-color .2s;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, .5);
+
+}
+
+.floating-toolbox li.button#info a {
+    padding: 0px;
+    margin:0;
+}
+
+.floating-toolbox li.button a:hover {
+    background: #eee;
+    transition: none;
+}
+.floating-toolbox li.button.checked a {
+    background: #bbb;
+}
+.floating-toolbox li.button.disabled a {
+    opacity: .4;
+    pointer-events: none;
+}
+.floating-toolbox li.button img {
+    display: block;
+    background-size: 100%;
+    background-position: center;
+    width: 24px;
+    height: 24px;
+    transition: background-image .2s;
+}

@@ -1,0 +1,8 @@
+node_modules
+build
+*.log
+*.lock
+test*
+*config.js
+size-plugin.json
+.DS_Store

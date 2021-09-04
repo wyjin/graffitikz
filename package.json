@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "graffitikz",
+  "description": "a simple 2D vector shape editor that supports TikZ output",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "preact build --no-sw --template src/template.html",
+    "serve": "sirv build --port 8080 --cors --single",
+    "dev": "preact watch --no-sw --template src/template.html",
+    "lint": "eslint src"
+  },
+  "eslintConfig": {
+    "extends": "preact"
+  },
+  "eslintIgnore": [
+    "build/*"
+  ],
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-preact": "^1.1.4",
+    "preact-cli": "^3.2.2",
+    "sirv-cli": "^1.0.14"
+  },
+  "dependencies": {
+    "classnames": "^2.3.1",
+    "copy-text-to-clipboard": "^3.0.1",
+    "html-react-parser": "^1.2.8",
+    "mathjax-full": "^3.2.0",
+    "preact": "^10.5.14",
+    "preact-render-to-string": "^5.1.19",
+    "react-colorful": "^5.3.0"
+  }
+}
