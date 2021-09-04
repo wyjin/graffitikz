@@ -40,7 +40,7 @@ export default class PropertyBox extends Component {
         this.props.updateState(this.props.id, {strokeColor: color})
     }
 
-    updateFillColor = () => {
+    updateFillColor = (color) => {
         this.props.updateState(this.props.id, {fillColor: color})
     }
 
