@@ -167,7 +167,6 @@ export class Canvas extends Component {
         if (evt.target.value === '') return
         if (this.props.tool === 'select' && this.state.selectedShape !== '') {
             this.state.shapes[this.state.selectedShape].strokeWidth = evt.target.value
-            // this.updateHistory()
         } else {
             this.state.drawingProperties.strokeWidth = evt.target.value
         }
@@ -210,7 +209,6 @@ export class Canvas extends Component {
         if (evt.target.value === '') return
         if (this.props.tool === 'select' && this.state.selectedShape !== '' && this.state.selectedShape.includes('polygon')) {
             this.state.shapes[this.state.selectedShape].cornerRadius = evt.target.value
-            // this.updateHistory()
         } else {
             this.state.drawingProperties.cornerRadius = evt.target.value
         }
@@ -289,8 +287,9 @@ export class Canvas extends Component {
     }
 
     getCoordinates = (evt, snapping) => {
-        let x = evt.clientX * this.scale + this.state.viewBoxLeft
-        let y = evt.clientY * this.scale + this.state.viewBoxBottom - this.state.height
+        const [clientX, clientY] = evt.type.includes('touch')? [evt.touches[0].clientX, evt.touches[0].clientY]: [evt.clientX, evt.clientY]
+        let x = clientX * this.scale + this.state.viewBoxLeft
+        let y = clientY * this.scale + this.state.viewBoxBottom - this.state.height
         if (snapping) {
             return this.getNearestGridPoint([x, y])
         }
@@ -559,12 +558,6 @@ export class Canvas extends Component {
 
     handleKeyboardInput = (evt) => {
         if (evt.key === 'Escape') {
-            if (this.state.selectedShape != '') {
-                this.setState({
-                    selectedShape: '',
-                    showProperties: false
-                })
-            }
             this.afterDrawUpdate()
         } else if (evt.key === 'Delete' || evt.key === 'Backspace') {
             this.deleteShape()
@@ -575,7 +568,7 @@ export class Canvas extends Component {
             this.createCurve(false)
             this.updateHistory()
             this.afterDrawUpdate()
-        } else if ((evt.altKey || evt.metaKey) && this.props.tool === 'curve' && !this.pointerDown) {
+        } else if ((evt.shiftKey || evt.metaKey) && this.props.tool === 'curve' && !this.pointerDown) {
             evt.preventDefault()
             if (this.cubicBuffer.length > 0) {
                 this.cubicBuffer.pop()
@@ -616,8 +609,11 @@ export class Canvas extends Component {
         this.updateSize()
         window.addEventListener('resize', () => this.updateSize())
         canvas.addEventListener('pointerdown', (evt) => this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt) => this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt) => this.handlePointerUp(evt))
+        canvas.addEventListener('touchend', (evt) => this.handlePointerUp(evt))
         canvas.addEventListener('pointermove', (evt) => this.handlePointerMove(evt))
+        canvas.addEventListener('touchmove', (evt) => this.handlePointerMove(evt))
         canvas.addEventListener('wheel', (evt)=>{this.handleZoom(evt)})
         window.addEventListener('keydown', (evt) => this.handleKeyboardInput(evt))
     }

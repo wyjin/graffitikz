@@ -41,8 +41,11 @@ class Point extends Component {
         let self = document.getElementById(this.state.id)
         let canvas = document.getElementById('grid')
         self.addEventListener('pointerdown', evt=>this.handlePointerDown(evt))
+        self.addEventListener('touchstart', evt=>this.handlePointerDown(evt))
         canvas.addEventListener('pointermove', evt=>this.handlePointerMove(evt))
+        canvas.addEventListener('touchmove', evt=>this.handlePointerMove(evt))
         canvas.addEventListener('pointerup', evt=>this.handlePointerUp(evt))
+        canvas.addEventListener('touchend', evt=>this.handlePointerUp(evt))
     }
 
     componentDidUpdate(nextProps) {
@@ -143,8 +146,11 @@ export class Line extends Component {
         self.addEventListener('mouseenter', (evt)=>this.handleMouseHover(evt))
         self.addEventListener('mouseleave', (evt)=>this.handleMouseLeave(evt))
         canvas.addEventListener('pointermove', (evt)=>this.handleMove(evt))
+        canvas.addEventListener('touchmove', (evt)=>this.handleMove(evt))
         canvas.addEventListener('pointerdown', (evt)=>this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt)=>this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt)=>this.handleMoveEnd(evt))
+        canvas.addEventListener('touchend', (evt)=>this.handleMoveEnd(evt))
 
         this.props.setTikZ(this.state.id, this.toTikZ())
     }
@@ -153,7 +159,7 @@ export class Line extends Component {
         evt.preventDefault()
         if (evt.which != 1) return
         if (this.mounted && this.props.tool === 'select'  && this.node && this.node.contains(evt.target)) {
-            this.setState({selected: true})
+            this.setState({selected: true, shadow:'visible'})
             this.props.setSelectedShape(this.state.id)
             this.props.togglePropsBar(true)
             this.posBuffer = [...this.props.getCoordinates(evt, this.props.snapping)]
@@ -364,8 +370,11 @@ export class RoundShape extends Component {
         self.addEventListener('mouseenter', (evt)=>this.handleMouseHover(evt))
         self.addEventListener('mouseleave', (evt)=>this.handleMouseLeave(evt))
         canvas.addEventListener('pointermove', (evt)=>this.handleMove(evt))
+        canvas.addEventListener('touchmove', (evt)=>this.handleMove(evt))
         canvas.addEventListener('pointerdown', (evt)=>this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt)=>this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt)=>this.handleMoveEnd(evt))
+        canvas.addEventListener('touchend', (evt)=>this.handleMoveEnd(evt))
         this.props.setTikZ(this.state.id, this.toTikZ())
     }
 
@@ -373,7 +382,7 @@ export class RoundShape extends Component {
         evt.preventDefault()
         if (evt.which != 1) return
         if (this.mounted && this.props.tool === 'select'  && this.node && this.node.contains(evt.target)) {
-            this.setState({selected: true})
+            this.setState({selected: true, shadow:'visible'})
             this.props.setSelectedShape(this.state.id)
 
             this.props.togglePropsBar(true)
@@ -564,8 +573,11 @@ export class Polygon extends Component {
         self.addEventListener('mouseenter', (evt)=>this.handleMouseHover(evt))
         self.addEventListener('mouseleave', (evt)=>this.handleMouseLeave(evt))
         canvas.addEventListener('pointermove', (evt)=>this.handleMove(evt))
+        canvas.addEventListener('touchmove', (evt)=>this.handleMove(evt))
         canvas.addEventListener('pointerdown', (evt)=>this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt)=>this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt)=>this.handleMoveEnd(evt))
+        canvas.addEventListener('touchend', (evt)=>this.handleMoveEnd(evt))
         this.props.setTikZ(this.state.id, this.toTikZ())
     }
 
@@ -573,7 +585,7 @@ export class Polygon extends Component {
         evt.preventDefault()
         if (evt.which != 1) return
         if (this.mounted && this.props.tool === 'select'  && this.node && this.node.contains(evt.target)) {
-            this.setState({selected: true})
+            this.setState({selected: true, shadow:'visible'})
             this.props.setSelectedShape(this.state.id)
             this.props.togglePropsBar(true)
             this.posBuffer = [...this.props.getCoordinates(evt, this.props.snapping)]
@@ -794,15 +806,18 @@ export class TextNode extends Component {
             height: bbox.height*this.props.scale,
         })
         canvas.addEventListener('pointermove', (evt)=>this.handleMove(evt))
+        canvas.addEventListener('touchmove', (evt)=>this.handleMove(evt))
         canvas.addEventListener('pointerdown', (evt)=>this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt)=>this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt)=>this.handleMoveEnd(evt))
+        canvas.addEventListener('touchend', (evt)=>this.handleMoveEnd(evt))
     }
 
     handlePointerDown(evt) {
         evt.preventDefault()
         if (evt.which != 1) return
         if (this.mounted && this.props.tool === 'select'  && this.node && this.node.contains(evt.target)) {
-            this.setState({selected: true})
+            this.setState({selected: true, shadow:'visible'})
             this.props.setSelectedShape(this.state.id)
             this.props.togglePropsBar(true)
             this.posBuffer = [...this.props.getCoordinates(evt, this.props.snapping)]
@@ -996,8 +1011,11 @@ export class Curve extends Component {
         self.addEventListener('mouseenter', (evt)=>this.handleMouseHover(evt))
         self.addEventListener('mouseleave', (evt)=>this.handleMouseLeave(evt))
         canvas.addEventListener('pointermove', (evt)=>this.handleMove(evt))
+        canvas.addEventListener('touchmove', (evt)=>this.handleMove(evt))
         canvas.addEventListener('pointerdown', (evt)=>this.handlePointerDown(evt))
+        canvas.addEventListener('touchstart', (evt)=>this.handlePointerDown(evt))
         canvas.addEventListener('pointerup', (evt)=>this.handleMoveEnd(evt))
+        canvas.addEventListener('touchend', (evt)=>this.handleMoveEnd(evt))
 
         this.props.setTikZ(this.state.id, this.toTikZ())
 
@@ -1007,7 +1025,7 @@ export class Curve extends Component {
         evt.preventDefault()
         if (evt.which !== 1) return
         if (this.mounted && this.props.tool === 'select'  && this.node && this.node.contains(evt.target)) {
-            this.setState({selected: true})
+            this.setState({selected: true, shadow:'visible'})
             this.props.setSelectedShape(this.state.id)
             this.props.togglePropsBar(true)
             this.posBuffer = [...this.props.getCoordinates(evt, this.props.snapping)]

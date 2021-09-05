@@ -18,6 +18,7 @@ button {
     padding: .3rem 1rem;
     background: #ccc;
     border: 0;
+    border-radius: 3px;
     transition: background-color .2s;
   }
   button:hover, button:focus {
@@ -80,10 +81,8 @@ a, img {
 
 .toolbox.fixed-toolbox {
         position: absolute;
-        top: 50%;
         background: rgba(221, 221, 221);
         box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, .5);
-        transform: translateY(-60%);
         border-radius: 5px;
     }
     .toolbox.fixed-toolbox ul {
@@ -124,8 +123,6 @@ a, img {
         display: block;
         background-size: 100%;
         background-position: center;
-        width: 24px;
-        height: 24px;
         transition: background-image .2s;
 }
 
@@ -135,8 +132,6 @@ a, img {
     border-radius: 5px;
     box-shadow: 0px 5px 10px 2px rgba(0, 0, 0, .5);
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     margin: 0 auto;
     bottom: 0;
     color:white;
@@ -172,7 +167,6 @@ a, img {
         -webkit-user-select: number;
         user-select: number;
         text-align: center;
-        width: 50px;
     }
     #properties li.button a:hover {
         background: rgba(150, 150, 150, .9);
@@ -234,6 +228,10 @@ a, img {
         transform: none;
 }
 
+.code-box {
+    border-radius: 5px;
+}
+
 .code-box textarea {
         display: block;
         padding: .5rem;
@@ -277,7 +275,6 @@ a, img {
   .popover {
     position: absolute;
     top: calc(-207px);
-    left: calc(-86px);
     border-radius: 9px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
@@ -299,7 +296,6 @@ a, img {
 
 .floating-toolbox {
     position: fixed;
-    bottom: 0.5em;
 }
 
 .floating-toolbox.left {
@@ -377,4 +373,68 @@ a, img {
     width: 24px;
     height: 24px;
     transition: background-image .2s;
+}
+
+@media (min-width: 650px) {
+    #properties {
+        left: 50%;
+        transform: translateX(-50%);
+    } #properties > ul  input[type=number] {
+        width: 50px;
+    }
+    .floating-toolbox {
+        bottom: 0.5em;
+    }
+    .floating-toolbox ul {
+        flex-direction: column-reverse;
+    }
+    #properties > ul  label {
+        display: block;
+    }
+    .popover {
+        left: calc(-86px);
+    }
+}
+
+@media (max-width: 650px) {
+    #properties {
+        right: 0;
+    }
+    #properties > ul  input[type=number] {
+        width: 30px;
+    }
+    .floating-toolbox {
+        top: 0.5em;
+    }
+    .floating-toolbox ul {
+        flex-direction: column;
+    }
+    #properties > ul  label {
+        display: none;
+    }
+    .popover {
+        left: calc(-173px);
+    }
+}
+
+@media (min-height:600px) {
+    .toolbox.fixed-toolbox {
+        top: 50%;
+        transform: translateY(-60%);
+    }
+    .toolbox.fixed-toolbox li.button img {
+        width: 24px;
+        height: 24px;
+}
+}
+
+@media (max-height:600px) {
+    .toolbox.fixed-toolbox {
+        top: 0;
+    }
+    .toolbox.fixed-toolbox li.button img {
+        background-repeat: no-repeat;
+        max-height: 4vh;
+        width: auto;
+    }
 }

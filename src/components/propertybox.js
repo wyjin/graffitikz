@@ -178,6 +178,7 @@ class ColorPickerToggler extends Component {
 
     componentDidMount() {
         document.addEventListener('pointerdown', evt=>this.handlePointerDown(evt))
+        document.addEventListener('touchstart', evt=>this.handlePointerDown(evt))
     }
 
     handlePointerDown(evt) {
