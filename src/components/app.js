@@ -103,11 +103,11 @@ export class App extends Component {
     }
 
     openGithubLink = () => {
-        window.open("https://github.com/wyjin", "_blank")
+        window.open("https://github.com/wyjin/graffitikz", "_blank")
     }
 
     openManualLink = () => {
-        window.open("https://github.com/wyjin", "_blank")
+        window.open("https://github.com/wyjin/graffitikz/blob/main/help.md", "_blank")
     }
 
     generateCode = () => {
