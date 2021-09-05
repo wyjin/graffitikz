@@ -1,0 +1,8 @@
+rewrite all shapes in <path> for grouping and expandability
+copy & paste shapes
+add & remove control points when editing shapes
+group shapes
+change z-indices of shapes in a stack
+flood fill
+
+use a smaller library for rendering tex
