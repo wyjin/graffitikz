@@ -34,6 +34,8 @@ When an existing shape is selected, a property box shows up. Properties of shape
 
 On the canvas, a shadow and some control points will appear around the selected shape. Move the selected shape around by dragging the shadow; change its shape by dragging the points.
 
+[Sep.10, 2021] When a shape is selected, you can press  <kbd>Ctrl</kbd>-<kbd>C</kbd> / <kbd>Cmd</kbd>-<kbd>C</kbd> to copy it and then <kbd>Ctrl</kbd>-<kbd>V</kbd> / <kbd>Cmd</kbd>-<kbd>V</kbd> to paste a copy to the current pointer location.
+
 #### Shortcuts
 
 Hold <kbd>SPACE</kbd> down: set tool to <img src="src/assets/pan.svg" alt="pan" width="24px"/>.
@@ -43,6 +45,10 @@ Hold <kbd>SPACE</kbd> down: set tool to <img src="src/assets/pan.svg" alt="pan" 
 <kbd>Ctrl</kbd>-<kbd>Y</kbd> / <kbd>Cmd</kbd>-<kbd>Y</kbd> / <kbd>Shift</kbd>-<kbd>Cmd</kbd>-<kbd>Z</kbd>: <img src="src/assets/redo.svg" alt="pan" width="24px"/>.
 
 <kbd>Ctrl</kbd>-<kbd>S</kbd> / <kbd>Cmd</kbd>-<kbd>S</kbd>: <img src="src/assets/save.svg" alt="pan" width="24px"/>.
+
+<kbd>Ctrl</kbd>-<kbd>C</kbd> / <kbd>Cmd</kbd>-<kbd>C</kbd> : copy selected shape. [Sep.10, 2021]
+
+<kbd>Ctrl</kbd>-<kbd>V</kbd> / <kbd>Cmd</kbd>-<kbd>V</kbd> : paste copied shape to pointer location. [Sep.10, 2021]
 
 <kbd>Esc</kbd>: abort drawing process (delete shapes that are being created, like unclosed polygon, unsubmitted text input, etc).
 

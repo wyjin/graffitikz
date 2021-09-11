@@ -41,11 +41,17 @@ export class Canvas extends Component {
         this.snappingThreshold = this.state.cellSize / 2
         this.tempDrawingObject = () => {}
         this.tempHtmlObject = () => {}
-        this.id = 0
+        let maxId = -1
+        for (let id in this.state.shapes) {
+            maxId = Math.max(parseInt(id.split('-')[3]), maxId)
+        }
+        this.id = maxId + 1
         this.history = [JSON.parse(JSON.stringify(this.state.shapes))]
         this.historyPointer = 0
         this.activeId = []
         this.tikz = {}
+        this.copyBuffer = []
+        this.currPointerPos = []
     }
 
     generateCode = () => {
@@ -222,7 +228,7 @@ export class Canvas extends Component {
         this.forceUpdate()
     }
 
-    getID = (shape) => {
+    getId = (shape) => {
         return "canvas-shape-" + shape + '-' + this.id++
     }
 
@@ -308,7 +314,7 @@ export class Canvas extends Component {
                 this.eventBuffer.push([posX, posY])
             } else {
                 const radius = Math.sqrt(Math.pow(posX - this.eventBuffer[0][0], 2) + Math.pow(posY - this.eventBuffer[0][1], 2))
-                const id = this.getID('circle')
+                const id = this.getId('circle')
                 this.state.shapes[id] = {id: id,
                     cx: this.eventBuffer[0][0],
                     cy: this.eventBuffer[0][1],
@@ -324,7 +330,7 @@ export class Canvas extends Component {
         } else if (this.props.tool === "polygon") {
             const [posX, posY] = this.getCoordinates(evt, this.state.snapping)
             if (this.eventBuffer.length > 0 && posX == this.eventBuffer[0][0] && posY == this.eventBuffer[0][1]) {
-                const id = this.getID('polygon')
+                const id = this.getId('polygon')
                 this.state.shapes[id] = {
                     id: id,
                     points: this.eventBuffer,
@@ -344,7 +350,7 @@ export class Canvas extends Component {
             if (this.eventBuffer.length == 0) {
                 this.eventBuffer.push([posX, posY])
             } else {
-                const id = this.getID('line')
+                const id = this.getId('line')
                 this.state.shapes[id] = {
                     id: id,
                     p1: this.eventBuffer[0],
@@ -416,7 +422,7 @@ export class Canvas extends Component {
 
     handlePointerMove = (evt) => {
         evt.preventDefault()
-
+        this.currPointerPos = this.getCoordinates(evt, this.state.snapping)
         if (this.props.tool === "roundShape" && this.eventBuffer.length != 0) {
             const [posX, posY] = this.getCoordinates(evt, this.state.snapping)
             const radius = Math.sqrt(Math.pow(posX - this.eventBuffer[0][0], 2) + Math.pow(posY - this.eventBuffer[0][1], 2))
@@ -485,7 +491,7 @@ export class Canvas extends Component {
 
     createTextNode = () => {
         if (this.textValue === '') return
-        const id = this.getID('text')
+        const id = this.getId('text')
         this.state.shapes[id] = {
             id: id,
             x: this.eventBuffer[0][0],
@@ -498,7 +504,7 @@ export class Canvas extends Component {
 
     createCurve = (closed) => {
         if (this.eventBuffer.length === 0) return
-        const id = this.getID('curve')
+        const id = this.getId('curve')
         this.state.shapes[id] = {
             id:id,
             closed: closed,
@@ -574,6 +580,64 @@ export class Canvas extends Component {
                 this.cubicBuffer.pop()
                 this.cubicBuffer.push([...this.eventBuffer[this.eventBuffer.length - 1]])
             }
+        } else if (this.state.tool === 'select' && this.state.selectedShape !== '' && (evt.metaKey || evt.ctrlKey)) {
+            switch(evt.key) {
+                case 'c': case 'C':
+                    const def = JSON.parse(JSON.stringify(this.state.shapes[this.state.selectedShape]))
+                    const shape = this.state.selectedShape.split('-')[2]
+                    this.copyBuffer = [[shape, def]]
+                    break
+                default:
+                    break
+            }
+        } else if (this.copyBuffer.length > 0 && (evt.metaKey || evt.ctrlKey) && ['v', 'V'].includes(evt.key)) {
+                for (let pair of this.copyBuffer) {
+                    const newId = this.getId(pair[0])
+                    let newDef = pair[1]
+                    const oldBbox = document.getElementById(newDef.id).getBoundingClientRect()
+                    let x = oldBbox.x * this.scale + this.state.viewBoxLeft
+                    let y = oldBbox.y * this.scale + this.state.viewBoxBottom - this.state.height
+                    if (this.state.snapping) {
+                        [x, y] = this.getNearestGridPoint([x, y])
+                    }
+                    let oldCenter = [x + 0.5 * oldBbox.width*this.scale, y + 0.5 * oldBbox.height*this.scale]
+                    if (this.state.snapping) {
+                        oldCenter = this.getNearestGridPoint(oldCenter)
+                    }
+                    const offset = [this.currPointerPos[0] - oldCenter[0], this.currPointerPos[1] - oldCenter[1]]
+                    newDef.id = newId
+                    switch (pair[0]) {
+                        case 'line':
+                            newDef.p1 = [newDef.p1[0] + offset[0], newDef.p1[1] + offset[1]]
+                            newDef.p2 = [newDef.p2[0] + offset[0], newDef.p2[1] + offset[1]]
+
+                            break
+                        case 'curve':
+                            for (let i = 0; i < newDef.anchorPoints.length; i++) {
+                                newDef.anchorPoints[i] = [newDef.anchorPoints[i][0] + offset[0], newDef.anchorPoints[i][1] + offset[1]]
+                            }
+                            for (let i = 0; i < newDef.controlPoints.length; i++) {
+                                newDef.controlPoints[i] = [newDef.controlPoints[i][0] + offset[0], newDef.controlPoints[i][1] + offset[1]]
+                            }
+                            break
+                        case 'circle':
+                            newDef.cx += offset[0]
+                            newDef.cy += offset[1]
+                            break
+                        case 'polygon':
+                            for (let i = 0; i < newDef.points.length; i++) {
+                                newDef.points[i] = [newDef.points[i][0] + offset[0], newDef.points[i][1] + offset[1]]
+                            }
+                            break
+                        case 'text':
+                            newDef.x += offset[0]
+                            newDef.y += offset[1]
+                            break
+                    }
+                    this.state.shapes[newId] = JSON.parse(JSON.stringify(newDef))
+                }
+                this.updateHistory()
+                this.forceUpdate()
         }
     }
 
