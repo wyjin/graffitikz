@@ -1161,7 +1161,7 @@ export class Curve extends Component {
             pointsFormat += `..controls (${this.state.controlPoints[2*i-2][0]},${-this.state.controlPoints[2*i-2][1]}) and (${this.state.controlPoints[2*i-1][0]},${-this.state.controlPoints[2*i-1][1]}) .. (${this.state.anchorPoints[i][0]},${-this.state.anchorPoints[i][1]}) `
         }
         if (this.state.closed) pointsFormat += '--cycle'
-        return `\\draw[draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()},${!this.state.closed && this.state.arrow}] ${pointsFormat} ;\n`
+        return `\\draw[${this.state.strokeStyle}, draw=${this.state.strokeColor.tikzColor()}, draw opacity=${this.state.strokeColor.tikzAlpha()}, line width=${this.state.strokeWidth/2}, fill=${this.state.fillColor.tikzColor()}, fill opacity=${this.state.fillColor.tikzAlpha()},${!this.state.closed ? this.state.arrow : ''}] ${pointsFormat} ;\n`
     }
 
     render() {

@@ -590,54 +590,55 @@ export class Canvas extends Component {
                 default:
                     break
             }
-        } else if (this.copyBuffer.length > 0 && (evt.metaKey || evt.ctrlKey) && ['v', 'V'].includes(evt.key)) {
-                for (let pair of this.copyBuffer) {
-                    const newId = this.getId(pair[0])
-                    let newDef = pair[1]
-                    const oldBbox = document.getElementById(newDef.id).getBoundingClientRect()
-                    let x = oldBbox.x * this.scale + this.state.viewBoxLeft
-                    let y = oldBbox.y * this.scale + this.state.viewBoxBottom - this.state.height
-                    if (this.state.snapping) {
-                        [x, y] = this.getNearestGridPoint([x, y])
-                    }
-                    let oldCenter = [x + 0.5 * oldBbox.width*this.scale, y + 0.5 * oldBbox.height*this.scale]
-                    if (this.state.snapping) {
-                        oldCenter = this.getNearestGridPoint(oldCenter)
-                    }
-                    const offset = [this.currPointerPos[0] - oldCenter[0], this.currPointerPos[1] - oldCenter[1]]
-                    newDef.id = newId
-                    switch (pair[0]) {
-                        case 'line':
-                            newDef.p1 = [newDef.p1[0] + offset[0], newDef.p1[1] + offset[1]]
-                            newDef.p2 = [newDef.p2[0] + offset[0], newDef.p2[1] + offset[1]]
-
-                            break
-                        case 'curve':
-                            for (let i = 0; i < newDef.anchorPoints.length; i++) {
-                                newDef.anchorPoints[i] = [newDef.anchorPoints[i][0] + offset[0], newDef.anchorPoints[i][1] + offset[1]]
-                            }
-                            for (let i = 0; i < newDef.controlPoints.length; i++) {
-                                newDef.controlPoints[i] = [newDef.controlPoints[i][0] + offset[0], newDef.controlPoints[i][1] + offset[1]]
-                            }
-                            break
-                        case 'circle':
-                            newDef.cx += offset[0]
-                            newDef.cy += offset[1]
-                            break
-                        case 'polygon':
-                            for (let i = 0; i < newDef.points.length; i++) {
-                                newDef.points[i] = [newDef.points[i][0] + offset[0], newDef.points[i][1] + offset[1]]
-                            }
-                            break
-                        case 'text':
-                            newDef.x += offset[0]
-                            newDef.y += offset[1]
-                            break
-                    }
-                    this.state.shapes[newId] = JSON.parse(JSON.stringify(newDef))
+        }
+        if (this.state.tool === 'select' &&  this.copyBuffer.length > 0 && (evt.metaKey || evt.ctrlKey) && ['v', 'V'].includes(evt.key)) {
+            for (let pair of this.copyBuffer) {
+                const newId = this.getId(pair[0])
+                let newDef = pair[1]
+                const oldBbox = document.getElementById(newDef.id).getBoundingClientRect()
+                let x = oldBbox.x * this.scale + this.state.viewBoxLeft
+                let y = oldBbox.y * this.scale + this.state.viewBoxBottom - this.state.height
+                if (this.state.snapping) {
+                    [x, y] = this.getNearestGridPoint([x, y])
                 }
-                this.updateHistory()
-                this.forceUpdate()
+                let oldCenter = [x + 0.5 * oldBbox.width*this.scale, y + 0.5 * oldBbox.height*this.scale]
+                if (this.state.snapping) {
+                    oldCenter = this.getNearestGridPoint(oldCenter)
+                }
+                const offset = [this.currPointerPos[0] - oldCenter[0], this.currPointerPos[1] - oldCenter[1]]
+                newDef.id = newId
+                switch (pair[0]) {
+                    case 'line':
+                        newDef.p1 = [newDef.p1[0] + offset[0], newDef.p1[1] + offset[1]]
+                        newDef.p2 = [newDef.p2[0] + offset[0], newDef.p2[1] + offset[1]]
+
+                        break
+                    case 'curve':
+                        for (let i = 0; i < newDef.anchorPoints.length; i++) {
+                            newDef.anchorPoints[i] = [newDef.anchorPoints[i][0] + offset[0], newDef.anchorPoints[i][1] + offset[1]]
+                        }
+                        for (let i = 0; i < newDef.controlPoints.length; i++) {
+                            newDef.controlPoints[i] = [newDef.controlPoints[i][0] + offset[0], newDef.controlPoints[i][1] + offset[1]]
+                        }
+                        break
+                    case 'circle':
+                        newDef.cx += offset[0]
+                        newDef.cy += offset[1]
+                        break
+                    case 'polygon':
+                        for (let i = 0; i < newDef.points.length; i++) {
+                            newDef.points[i] = [newDef.points[i][0] + offset[0], newDef.points[i][1] + offset[1]]
+                        }
+                        break
+                    case 'text':
+                        newDef.x += offset[0]
+                        newDef.y += offset[1]
+                        break
+                }
+                this.state.shapes[newId] = JSON.parse(JSON.stringify(newDef))
+            }
+            this.updateHistory()
+            this.forceUpdate()
         }
     }
 
